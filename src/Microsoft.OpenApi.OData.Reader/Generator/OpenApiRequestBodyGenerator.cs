@@ -3,12 +3,13 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
-using System.Linq;
-using System.Collections.Generic;
 using Microsoft.OData.Edm;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.OData.Edm;
 using Microsoft.OpenApi.OData.Common;
+using Microsoft.OpenApi.OData.Edm;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Microsoft.OpenApi.OData.Generator
 {
@@ -114,15 +115,40 @@ namespace Microsoft.OpenApi.OData.Generator
                 OpenApiRequestBody requestBody = context.CreateRequestBody(action);
                 if (requestBody != null)
                 {
+                    //var bindingTypeName = action.IsBound
+                    //    ? action.Parameters.First().Type.ShortQualifiedName().Replace(".", "_")
+                    //    : "Unbound";
+
                     var bindingTypeName = action.IsBound
                         ? action.Parameters.First().Type.ShortQualifiedName().Replace(".", "_")
                         : "Unbound";
 
-                    requestBodies.Add($"{bindingTypeName}_{action.Name}RequestBody", requestBody);
+                    //requestBodies.Add($"{bindingTypeName}_{action.Name}RequestBody", requestBody);
+                    if (requestBodies.TryGetValue($"{action.Name}RequestBody", out var existing))
+                    {
+                        if (SignaturesMatch(existing, requestBody))
+                        {
+                            continue; // reuse, negeneruj nový
+                        }
+                        else
+                        {
+                            requestBodies.Add($"{bindingTypeName}_{action.Name}RequestBody", requestBody);
+                        }
+                    }
+                    else
+                    {
+                        requestBodies.Add($"{action.Name}RequestBody", requestBody);
+                    }
                 }
             }
 
             return requestBodies;
+        }
+
+        static bool SignaturesMatch(OpenApiRequestBody a, OpenApiRequestBody b)
+        {
+            return a.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0) ==
+                   b.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
         }
 
         /// <summary>
