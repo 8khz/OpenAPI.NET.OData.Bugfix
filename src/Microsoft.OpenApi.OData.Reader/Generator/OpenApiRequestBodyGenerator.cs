@@ -113,9 +113,15 @@ namespace Microsoft.OpenApi.OData.Generator
             {
                 OpenApiRequestBody requestBody = context.CreateRequestBody(action);
                 if (requestBody != null)
-                    requestBodies.Add($"{action.Name}RequestBody", requestBody);
+                {
+                    var bindingTypeName = action.IsBound
+                        ? action.Parameters.First().Type.ShortQualifiedName().Replace(".", "_")
+                        : "Unbound";
+
+                    requestBodies.Add($"{bindingTypeName}_{action.Name}RequestBody", requestBody);
+                }
             }
-      
+
             return requestBodies;
         }
 
