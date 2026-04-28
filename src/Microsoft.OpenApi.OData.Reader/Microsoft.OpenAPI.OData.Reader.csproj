@@ -14,7 +14,7 @@
     <RootNamespace>Microsoft.OpenApi.OData</RootNamespace>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <PackageId>Microsoft.OpenApi.OData</PackageId>
-    <SignAssembly>true</SignAssembly>
+    <!--<SignAssembly>true</SignAssembly>-->
     <Version>1.6.0</Version>
     <Description>This package contains the codes you need to convert OData CSDL to Open API Document of Model.</Description>
     <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
@@ -34,7 +34,6 @@
 - Adds ability to change the response or request body content media type based on custom annotation properties #405
     </PackageReleaseNotes>
     <AssemblyName>Microsoft.OpenApi.OData.Reader</AssemblyName>
-    <AssemblyOriginatorKeyFile>..\..\tool\Microsoft.OpenApi.OData.snk</AssemblyOriginatorKeyFile>
     <OutputPath Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">..\..\bin\Debug\</OutputPath>
     <OutputPath Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">..\..\bin\Release\</OutputPath>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
